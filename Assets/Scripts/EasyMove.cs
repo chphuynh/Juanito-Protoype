@@ -49,71 +49,19 @@ public class EasyMove : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.UpArrow))
             {
-                npcText.text = "";
-                textField.SetActive(false);
-                if (Physics.Linecast(transform.position, transform.position + new Vector3(0, moveRange, 0), out hit))
-                {
-                    if (hit.collider.gameObject.tag == "NPC")
-                    {
-                        Talk(hit.collider.gameObject);
-                    }
-                }
-                else if (!Physics.Linecast(transform.position, transform.position + new Vector3(0, moveRange, 0)))
-                {
-                    transform.Translate(0, moveRange, 0);
-                    if (OnPlayerMove != null) OnPlayerMove();
-                }
+                MoveDirection(0, moveRange, 0);
             }
             else if (Input.GetKeyDown(KeyCode.DownArrow))
             {
-                npcText.text = "";
-                textField.SetActive(false);
-                if (Physics.Linecast(transform.position, transform.position + new Vector3(0, -moveRange, 0), out hit))
-                {
-                    if (hit.collider.gameObject.tag == "NPC")
-                    {
-                        Talk(hit.collider.gameObject);
-                    }
-                }
-                else if (!Physics.Linecast(transform.position, transform.position + new Vector3(0, -moveRange, 0)))
-                {
-                    transform.Translate(0, -moveRange, 0);
-                    if (OnPlayerMove != null) OnPlayerMove();
-                }
+                MoveDirection(0, -moveRange, 0);
             }
             else if (Input.GetKeyDown(KeyCode.RightArrow))
             {
-                npcText.text = "";
-                textField.SetActive(false);
-                if (Physics.Linecast(transform.position, transform.position + new Vector3(moveRange, 0, 0), out hit))
-                {
-                    if (hit.collider.gameObject.tag == "NPC")
-                    {
-                        Talk(hit.collider.gameObject);
-                    }
-                }
-                else if (!Physics.Linecast(transform.position, transform.position + new Vector3(moveRange, 0, 0)))
-                {
-                    transform.Translate(moveRange, 0, 0);
-                    if (OnPlayerMove != null) OnPlayerMove();
-                }
+                MoveDirection(moveRange, 0, 0);
             }
             else if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
-                npcText.text = "";
-                textField.SetActive(false);
-                if (Physics.Linecast(transform.position, transform.position + new Vector3(-moveRange, 0, 0), out hit))
-                {
-                    if (hit.collider.gameObject.tag == "NPC")
-                    {
-                        Talk(hit.collider.gameObject);
-                    }
-                }
-                else if (!Physics.Linecast(transform.position, transform.position + new Vector3(-moveRange, 0, 0)))
-                {
-                    transform.Translate(-moveRange, 0, 0);
-                    if (OnPlayerMove != null) OnPlayerMove();
-                }
+                MoveDirection(-moveRange, 0, 0);
             }
         }
     }
@@ -123,6 +71,24 @@ public class EasyMove : MonoBehaviour
         if (smoothMode && col.gameObject.tag == "NPC")
         {
             Talk(col.gameObject);
+        }
+    }
+
+    void MoveDirection(int x, int y, int z)
+    {
+        npcText.text = "";
+        textField.SetActive(false);
+        if (Physics.Linecast(transform.position, transform.position + new Vector3(x, y, z), out hit))
+        {
+            if (hit.collider.gameObject.tag == "NPC")
+            {
+                Talk(hit.collider.gameObject);
+            }
+        }
+        else if (!Physics.Linecast(transform.position, transform.position + new Vector3(x, y, z)))
+        {
+            transform.Translate(x, y, z);
+            if (OnPlayerMove != null) OnPlayerMove();
         }
     }
 }
