@@ -29,8 +29,16 @@ public class EasyMove : MonoBehaviour
     //Handles npc interaction
     void Talk(GameObject npc)
     {
-                textField.SetActive(true);
-                npcText.text = npc.GetComponent<NpcMovement>().dialogue;
+		textField.SetActive(true);
+		npcText.text = npc.GetComponent<NpcMovement>().dialogue;
+    }
+	//Handles box interaction
+    void MoveBox(GameObject box, int x, int y, int z)
+    {
+		while (!Physics.Linecast(box.transform.position, box.transform.position + new Vector3(x, y, z)))
+        {
+            box.transform.Translate(x, y, z);
+        }
     }
     //regulated call if smooth movement enabled
     void FixedUpdate()
@@ -68,9 +76,16 @@ public class EasyMove : MonoBehaviour
     //collision based interaction if smooth movement enabled
     void OnCollisionEnter(Collision col)
     {
-        if (smoothMode && col.gameObject.tag == "NPC")
+        if (smoothMode)
         {
-            Talk(col.gameObject);
+			if (col.gameObject.tag == "NPC")
+			{
+				Talk(col.gameObject);
+			}
+			else if (col.gameObject.tag == "Box")
+			{
+				
+			}
         }
     }
 
@@ -84,6 +99,10 @@ public class EasyMove : MonoBehaviour
             {
                 Talk(hit.collider.gameObject);
             }
+			else if (hit.collider.gameObject.tag == "Box")
+			{
+				MoveBox(hit.collider.gameObject, x, y, z);
+			}
         }
         else if (!Physics.Linecast(transform.position, transform.position + new Vector3(x, y, z)))
         {
