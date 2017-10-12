@@ -38,77 +38,74 @@ public class NpcMovement : MonoBehaviour {
     {
 
         //First check if player is in range
-        if (Physics.Linecast(transform.position, transform.position + new Vector3(range, 0, 0), out hit)
-            && hit.collider.gameObject.tag == "Player" && direction == 1)
+        if (PlayerCheck(range, 0, 0, 1))
         {
 
         }
-        else if (Physics.Linecast(transform.position, transform.position + new Vector3(0, range, 0), out hit)
-            && hit.collider.gameObject.tag == "Player" && direction == 2)
+        else if (PlayerCheck(0, range, 0, 2))
         {
 
         }
-        else if (Physics.Linecast(transform.position, transform.position + new Vector3(0, -range, 0), out hit)
-            && hit.collider.gameObject.tag == "Player" && direction ==3)
+        else if (PlayerCheck(0, -range, 0, 3))
         {
 
         }
-        else if (Physics.Linecast(transform.position, transform.position + new Vector3(-range, 0, 0), out hit)
-            && hit.collider.gameObject.tag == "Player" && direction == 4)
+        else if (PlayerCheck(-range, 0, 0, 4))
         {
 
         }
         //try to move in a direction
         else if (direction == 1)
         {
-            if (Physics.Linecast(transform.position, transform.position + new Vector3(range, 0, 0), out hit))
-            {
-                direction = 4;
-                transform.Translate(new Vector3(hit.transform.position.x + -1 - transform.position.x, 0, 0));
-
-            }
-            else if (!Physics.Linecast(transform.position, transform.position + new Vector3(range, 0, 0)))
-            {
-                transform.Translate(range, 0, 0);
-            }
+            MoveDirection(range, 0, 0, 4);
         }
         else if (direction == 2)
         {
-            if (Physics.Linecast(transform.position, transform.position + new Vector3(0, range, 0), out hit))
-            {
-                direction = 3;
-                transform.Translate(new Vector3(0, hit.transform.position.y + -1 - transform.position.y, 0));
-            }
-            else if (!Physics.Linecast(transform.position, transform.position + new Vector3(0, range, 0)))
-            {
-                transform.Translate(0, range, 0);
-            }
+            MoveDirection(0, range, 0, 3);
         }
 
         else if (direction == 3)
         {
-            if (Physics.Linecast(transform.position, transform.position + new Vector3(0, -range, 0), out hit))
-            {
-                direction = 2;
-                transform.Translate(new Vector3(0, hit.transform.position.y + 1 - transform.position.y, 0));
-            }
-            else if (!Physics.Linecast(transform.position, transform.position + new Vector3(0, -range, 0)))
-            {
-                transform.Translate(0, -range, 0);
-            }
+            MoveDirection(0, -range, 0, 2);
         }
 
         else if (direction == 4)
         {
-            if (Physics.Linecast(transform.position, transform.position + new Vector3(-range, 0, 0), out hit))
+            MoveDirection(-range, 0, 0, 1);
+        }
+    }
+
+    bool PlayerCheck(int x, int y, int z, int targetDirection)
+    {
+        return Physics.Linecast(transform.position, transform.position + new Vector3(x, y, z), out hit)
+            && hit.collider.gameObject.tag == "Player" && direction == targetDirection;
+    }
+
+    void MoveDirection(int x, int y, int z, int newDirection)
+    {
+        if (Physics.Linecast(transform.position, transform.position + new Vector3(x, y, z), out hit))
+        {
+            direction = newDirection;
+            if(newDirection == 4)
             {
-                direction = 1;
+                transform.Translate(new Vector3(hit.transform.position.x + -1 - transform.position.x, 0, 0));
+            }
+            else if(newDirection == 3)
+            {
+                transform.Translate(new Vector3(0, hit.transform.position.y + -1 - transform.position.y, 0));
+            }
+            else if(newDirection == 2)
+            {
+                transform.Translate(new Vector3(0, hit.transform.position.y + 1 - transform.position.y, 0));
+            }
+            else if(newDirection == 1)
+            {
                 transform.Translate(new Vector3(hit.transform.position.x + 1 - transform.position.x, 0, 0));
             }
-            else if (!Physics.Linecast(transform.position, transform.position + new Vector3(-range, 0, 0)))
-            {
-                transform.Translate(-range, 0, 0);
-            }
+        }
+        else if (!Physics.Linecast(transform.position, transform.position + new Vector3(x,y,z)))
+        {
+            transform.Translate(x, y, z);
         }
     }
 }
