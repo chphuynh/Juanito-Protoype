@@ -105,4 +105,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae2513a48c8180e4c989feccbe6cda7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventType: -1
+  eventType: 1

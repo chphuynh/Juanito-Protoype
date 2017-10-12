@@ -40,6 +40,17 @@ public class EasyMove : MonoBehaviour
             box.transform.Translate(x, y, z);
         }
     }
+	void HandleEventTrigger(int trigger) {
+		switch(trigger) {
+			case 1:
+				textField.SetActive(true);
+				npcText.text = "Hesi Is Awesome";
+				break;
+			default:
+				Debug.Log("Not defined.");
+				break;
+		}
+	}
     //regulated call if smooth movement enabled
     void FixedUpdate()
     {
@@ -93,8 +104,10 @@ public class EasyMove : MonoBehaviour
     {
         npcText.text = "";
         textField.SetActive(false);
+		bool continueMove = true;
         if (Physics.Linecast(transform.position, transform.position + new Vector3(x, y, z), out hit))
         {
+			continueMove = false;
             if (hit.collider.gameObject.tag == "NPC")
             {
                 Talk(hit.collider.gameObject);
@@ -103,8 +116,13 @@ public class EasyMove : MonoBehaviour
 			{
 				MoveBox(hit.collider.gameObject, x, y, z);
 			}
+			else if (hit.collider.gameObject.tag == "EventTrigger") {
+				HandleEventTrigger(hit.collider.gameObject.GetComponent<EventTrigger>().eventType);
+				continueMove = true;
+			}
         }
-        else if (!Physics.Linecast(transform.position, transform.position + new Vector3(x, y, z)))
+        
+		if (continueMove)
         {
             transform.Translate(x, y, z);
             if (OnPlayerMove != null) OnPlayerMove();

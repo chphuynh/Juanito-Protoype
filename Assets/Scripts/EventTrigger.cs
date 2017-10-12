@@ -9,8 +9,6 @@ public class EventTrigger : MonoBehaviour {
     
     void Start()
     {
-		if (eventType == null) {
-			eventType = -1;
-		}
+		GetComponent<Renderer>().enabled = false;
 	}
 }
