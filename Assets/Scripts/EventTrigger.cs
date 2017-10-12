@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class EventTrigger : MonoBehaviour {
 
-    public int eventType;
+    public string eventType;
     
     void Start()
     {

@@ -1936,6 +1936,21 @@ Prefab:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 65652037219096330, guid: 411f692a77ade384ba83b4b177b11cd3,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 65652037219096330, guid: 411f692a77ade384ba83b4b177b11cd3,
+        type: 2}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114286380052737278, guid: 411f692a77ade384ba83b4b177b11cd3,
+        type: 2}
+      propertyPath: eventType
+      value: enterHouse1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 411f692a77ade384ba83b4b177b11cd3, type: 2}
   m_IsPrefabParent: 0

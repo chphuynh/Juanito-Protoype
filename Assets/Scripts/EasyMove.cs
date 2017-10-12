@@ -40,9 +40,9 @@ public class EasyMove : MonoBehaviour
             box.transform.Translate(x, y, z);
         }
     }
-	void HandleEventTrigger(int trigger) {
+	void HandleEventTrigger(string trigger) {
 		switch(trigger) {
-			case 1:
+			case "enterHouse1":
 				textField.SetActive(true);
 				npcText.text = "Hesi Is Awesome";
 				break;
