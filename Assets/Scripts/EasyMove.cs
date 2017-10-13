@@ -42,9 +42,15 @@ public class EasyMove : MonoBehaviour
     }
 	void HandleEventTrigger(string trigger) {
 		switch(trigger) {
-			case "enterHouse1":
+			case "teleport1":
+				transform.Translate(new Vector3(5, -1, 0));
 				textField.SetActive(true);
-				npcText.text = "Hesi Is Awesome";
+				npcText.text = "??";
+				break;
+			case "teleport2":
+				transform.Translate(new Vector3(-4, 0, 0));
+				textField.SetActive(true);
+				npcText.text = "??";
 				break;
 			default:
 				Debug.Log("Not defined.");
