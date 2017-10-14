@@ -12,7 +12,7 @@ public class NpcMovement : MonoBehaviour {
     //direction to move in 1=east,2=north,3=south,4=west
     public int direction = 1;
     
-    public string dialogue;
+    //public string dialogue;
     //find player
     void Awake()
     {
