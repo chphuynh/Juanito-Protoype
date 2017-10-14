@@ -17,6 +17,12 @@ public class DialogueManager : MonoBehaviour {
 		textField.SetActive(false);
 	}
 	
+	void Update()
+	{
+		if (Input.GetKey("escape"))
+            Application.Quit();
+	}
+
 	public void StartDialogue(Dialogue dialogue)
 	{
 		textField.SetActive(true);

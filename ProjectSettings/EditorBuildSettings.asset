@@ -5,6 +5,9 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/ProtoCity.unity
     guid: c6247e2d780a0164c89f4cb97e14bb94
+  - enabled: 1
+    path: Assets/Scenes/City Level 1.unity
+    guid: 8f987c5e1798a374f96ea9c73a63e446
