@@ -12,27 +12,21 @@ public class EasyMove : MonoBehaviour
     //base Movement Related
     public int moveRange;
     private RaycastHit hit;
+   
     //Delegate manages a stack of all non player actions that occur
     public delegate void MoveAction();
     public static event MoveAction OnPlayerMove;
+    
     //Dialogue
-    public Text npcText;
     public GameObject textField;
- 
 
-    //Disable Dialogue Box
-    void Start()
-    {
-        npcText.text = "";
-        textField.SetActive(false);
-    }
     //Handles npc interaction
     void Talk(GameObject npc)
     {
-		textField.SetActive(true);
-		npcText.text = npc.GetComponent<NpcMovement>().dialogue;
+        if(npc.GetComponent<DialogueTrigger>()!= null) npc.GetComponent<DialogueTrigger>().TriggerDialogue();
     }
-	//Handles box interaction
+	
+    //Handles box interaction
     void MoveBox(GameObject box, int x, int y, int z)
     {
 		while (!Physics.Linecast(box.transform.position, box.transform.position + new Vector3(x, y, z)))
@@ -42,9 +36,11 @@ public class EasyMove : MonoBehaviour
     }
 	void HandleEventTrigger(string trigger) {
 		switch(trigger) {
-			case "enterHouse1":
-				textField.SetActive(true);
-				npcText.text = "Hesi Is Awesome";
+			case "teleport1":
+				transform.Translate(new Vector3(5, -1, 0));
+				break;
+			case "teleport2":
+				transform.Translate(new Vector3(-4, 0, 0));
 				break;
 			default:
 				Debug.Log("Not defined.");
@@ -84,6 +80,7 @@ public class EasyMove : MonoBehaviour
             }
         }
     }
+    
     //collision based interaction if smooth movement enabled
     void OnCollisionEnter(Collision col)
     {
@@ -102,9 +99,14 @@ public class EasyMove : MonoBehaviour
 
     void MoveDirection(int x, int y, int z)
     {
-        npcText.text = "";
-        textField.SetActive(false);
 		bool continueMove = true;
+		
+        // Continue Conversation       
+        if(FindObjectOfType<DialogueManager>().textField.activeSelf)
+        {
+            FindObjectOfType<DialogueManager>().DisplayNextSentence();
+            return;
+        }
         if (Physics.Linecast(transform.position, transform.position + new Vector3(x, y, z), out hit))
         {
 			continueMove = false;
