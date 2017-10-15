@@ -8,6 +8,7 @@ public class EasyMove : MonoBehaviour
     //alternative movement
     public bool smoothMode = false;
     public float walkSpeed = 3;
+	public int boxesOnTarget = 0;
 
     //base Movement Related
     public int moveRange;
@@ -29,17 +30,38 @@ public class EasyMove : MonoBehaviour
     //Handles box interaction
     void MoveBox(GameObject box, int x, int y, int z)
     {
+		bool wasOnTarget = isOnBlockTarget(box);
+		bool moved = false;
 		while (true)
 		{
+			moved = true;
 			bool blocked = Physics.Linecast(box.transform.position, box.transform.position + new Vector3(x, y, z), out hit);
-			if (!blocked || hit.collider.gameObject.tag == "EventTrigger")
+			string hitTag = (blocked)? hit.collider.gameObject.tag: "";
+			if (!blocked || hitTag == "EventTrigger" || hitTag == "BoxTarget")
 			{
 				box.transform.Translate(x, y, z);
 			} else {
 				break;
 			}
         }
+		
+		if (moved)
+		{
+			if (wasOnTarget)
+			{
+				--boxesOnTarget;
+			}
+			
+			if (isOnBlockTarget(box))
+			{
+				++boxesOnTarget;
+			}
+		}
     }
+	public bool isOnBlockTarget(GameObject obj) {
+		bool coll = Physics.Linecast(obj.transform.position, obj.transform.position + new Vector3(0f,0f,0.5f), out hit);
+		return coll && hit.collider.gameObject.tag == "BoxTarget";
+	}
 	public void HandleEventTrigger(string trigger) 
     {
 		switch(trigger) {
@@ -131,16 +153,19 @@ public class EasyMove : MonoBehaviour
         if (Physics.Linecast(transform.position, transform.position + new Vector3(x, y, z), out hit))
         {
 			continueMove = false;
-            if (hit.collider.gameObject.tag == "NPC")
+			string hitTag = hit.collider.gameObject.tag;
+            if (hitTag == "NPC")
             {
                 Talk(hit.collider.gameObject);
             }
-			else if (hit.collider.gameObject.tag == "Box")
+			else if (hitTag == "Box")
 			{
 				MoveBox(hit.collider.gameObject, x, y, z);
 			}
-			else if (hit.collider.gameObject.tag == "EventTrigger") {
+			else if (hitTag == "EventTrigger") {
 				HandleEventTrigger(hit.collider.gameObject.GetComponent<EventTrigger>().eventType);
+				continueMove = true;
+			} else if (hitTag == "BoxTarget") {
 				continueMove = true;
 			}
         }
