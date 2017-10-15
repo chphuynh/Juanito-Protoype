@@ -29,9 +29,15 @@ public class EasyMove : MonoBehaviour
     //Handles box interaction
     void MoveBox(GameObject box, int x, int y, int z)
     {
-		while (!Physics.Linecast(box.transform.position, box.transform.position + new Vector3(x, y, z)))
-        {
-            box.transform.Translate(x, y, z);
+		while (true)
+		{
+			bool blocked = Physics.Linecast(box.transform.position, box.transform.position + new Vector3(x, y, z), out hit);
+			if (!blocked || hit.collider.gameObject.tag == "EventTrigger")
+			{
+				box.transform.Translate(x, y, z);
+			} else {
+				break;
+			}
         }
     }
 	public void HandleEventTrigger(string trigger) 
