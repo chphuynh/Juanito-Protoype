@@ -34,14 +34,29 @@ public class EasyMove : MonoBehaviour
             box.transform.Translate(x, y, z);
         }
     }
-	void HandleEventTrigger(string trigger) {
+	public void HandleEventTrigger(string trigger) 
+    {
 		switch(trigger) {
-			case "teleport1":
-				transform.Translate(new Vector3(5, -1, 0));
+			case "leaveHouse":
+				transform.Translate(new Vector3(0, -27, 0));
 				break;
-			case "teleport2":
-				transform.Translate(new Vector3(-4, 0, 0));
-				break;
+			case "enterHouse":
+				transform.Translate(new Vector3(0, 27, 0));
+                break;
+            case "spawnBoxes":
+                GameObject boxes = GameObject.FindWithTag("Boxes");
+                foreach(Transform box in boxes.transform)
+                {
+                    box.transform.GetChild(0).gameObject.SetActive(true);
+                }
+                break;
+            case "enterPharm":
+                transform.Translate(new Vector3(-25,0,0));
+                break;
+            case "leavePharm":
+                //transform.Translate(new Vector3(25,0,0));
+                transform.position = new Vector3(-7.5f, 1.5f, -1f);
+                break;
 			default:
 				Debug.Log("Not defined.");
 				break;

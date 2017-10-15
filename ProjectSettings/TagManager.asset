@@ -9,6 +9,7 @@ TagManager:
   - NPC
   - Box
   - EventTrigger
+  - Boxes
   layers:
   - Default
   - TransparentFX

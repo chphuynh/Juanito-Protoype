@@ -11,6 +11,8 @@ public class DialogueManager : MonoBehaviour {
 	public Text dialogueText;
 	public GameObject textField;
 
+	private string eventTrigger;
+
 	// Use this for initialization
 	void Start () {
 		sentences = new Queue<string>();
@@ -23,9 +25,11 @@ public class DialogueManager : MonoBehaviour {
             Application.Quit();
 	}
 
-	public void StartDialogue(Dialogue dialogue)
+	public void StartDialogue(Dialogue dialogue, string eventType)
 	{
 		textField.SetActive(true);
+
+		eventTrigger = eventType;
 
 		nameText.text = dialogue.name;
 
@@ -68,6 +72,8 @@ public class DialogueManager : MonoBehaviour {
 	{
 		nameText.text = "";
 		dialogueText.text = "";
+		FindObjectOfType<EasyMove>().HandleEventTrigger(eventTrigger);
+		eventTrigger = "";
 		textField.SetActive(false);
 	}
 
