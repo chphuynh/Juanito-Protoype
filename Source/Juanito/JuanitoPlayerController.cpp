@@ -21,7 +21,7 @@ void AJuanitoPlayerController::PlayerTick(float DeltaTime)
 	if (!MovementInput.IsZero())
 	{
 		FVector nextLoc = GetPawn()->GetActorLocation()
-			+ (MovementInput.GetSafeNormal() * SPEED);;
+			+ (MovementInput.GetSafeNormal() * SPEED);
 		SetNewMoveDestination(nextLoc);
 	}
 	// keep updating the destination every tick while desired
