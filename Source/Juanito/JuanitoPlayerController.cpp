@@ -15,12 +15,13 @@ AJuanitoPlayerController::AJuanitoPlayerController()
 void AJuanitoPlayerController::PlayerTick(float DeltaTime)
 {
 	Super::PlayerTick(DeltaTime);
-
+	
+	
 	// keep updating the destination every tick while desired
-	if (bMoveToMouseCursor)
+	/*if (bMoveToMouseCursor)
 	{
 		MoveToMouseCursor();
-	}
+	}*/
 }
 
 void AJuanitoPlayerController::SetupInputComponent()
@@ -34,8 +35,10 @@ void AJuanitoPlayerController::SetupInputComponent()
 	// support touch devices 
 	InputComponent->BindTouch(EInputEvent::IE_Pressed, this, &AJuanitoPlayerController::MoveToTouchLocation);
 	InputComponent->BindTouch(EInputEvent::IE_Repeat, this, &AJuanitoPlayerController::MoveToTouchLocation);
-
-	InputComponent->BindAction("ResetVR", IE_Pressed, this, &AJuanitoPlayerController::OnResetVR);
+	
+	// Set up keybinds
+	InputComponent->BindAxis("MoveForward", this, &AJuanitoPlayerController::MoveForward);
+    InputComponent->BindAxis("MoveRight", this, &AJuanitoPlayerController::MoveRight);
 }
 
 void AJuanitoPlayerController::OnResetVR()
@@ -109,4 +112,18 @@ void AJuanitoPlayerController::OnSetDestinationReleased()
 {
 	// clear flag to indicate we should stop updating the destination
 	bMoveToMouseCursor = false;
+}
+
+void AJuanitoPlayerController::MoveForward(float axisValue)
+{
+	MovementInput.Y = axisValue;
+	UE_LOG(LogTemp, Log, TEXT("MovementInput.Y: %f"), MovementInput.Y);
+	
+}
+
+void AJuanitoPlayerController::MoveRight(float axisValue)
+{
+	MovementInput.X = axisValue;
+	UE_LOG(LogTemp, Log, TEXT("MovementInput.X: %f"), MovementInput.X);
+	
 }

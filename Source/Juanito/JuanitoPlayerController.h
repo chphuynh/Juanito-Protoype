@@ -17,6 +17,7 @@ public:
 protected:
 	/** True if the controlled character should navigate to the mouse cursor. */
 	uint32 bMoveToMouseCursor : 1;
+	FVector2D MovementInput;
 
 	// Begin PlayerController interface
 	virtual void PlayerTick(float DeltaTime) override;
@@ -38,6 +39,10 @@ protected:
 	/** Input handlers for SetDestination action. */
 	void OnSetDestinationPressed();
 	void OnSetDestinationReleased();
+	
+	/** Input handlers for WASD */
+	void MoveForward(float axisValue);
+	void MoveRight(float axisValue);
 };
 
 
