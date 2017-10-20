@@ -17,7 +17,7 @@ public:
 protected:
 	/** True if the controlled character should navigate to the mouse cursor. */
 	uint32 bMoveToMouseCursor : 1;
-	FVector2D MovementInput;
+	FVector MovementInput;
 
 	// Begin PlayerController interface
 	virtual void PlayerTick(float DeltaTime) override;

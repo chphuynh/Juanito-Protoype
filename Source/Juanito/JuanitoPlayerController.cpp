@@ -6,6 +6,8 @@
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "JuanitoCharacter.h"
 
+#define SPEED 100.0f
+
 AJuanitoPlayerController::AJuanitoPlayerController()
 {
 	bShowMouseCursor = true;
@@ -16,7 +18,12 @@ void AJuanitoPlayerController::PlayerTick(float DeltaTime)
 {
 	Super::PlayerTick(DeltaTime);
 	
-	
+	if (!MovementInput.IsZero())
+	{
+		FVector nextLoc = GetPawn()->GetActorLocation()
+			+ (MovementInput.GetSafeNormal() * SPEED);;
+		SetNewMoveDestination(nextLoc);
+	}
 	// keep updating the destination every tick while desired
 	/*if (bMoveToMouseCursor)
 	{
@@ -95,7 +102,7 @@ void AJuanitoPlayerController::SetNewMoveDestination(const FVector DestLocation)
 		float const Distance = FVector::Dist(DestLocation, MyPawn->GetActorLocation());
 
 		// We need to issue move command only if far enough in order for walk animation to play correctly
-		if (NavSys && (Distance > 120.0f))
+		if (NavSys && (Distance >= SPEED))
 		{
 			NavSys->SimpleMoveToLocation(this, DestLocation);
 		}
@@ -117,13 +124,9 @@ void AJuanitoPlayerController::OnSetDestinationReleased()
 void AJuanitoPlayerController::MoveForward(float axisValue)
 {
 	MovementInput.Y = axisValue;
-	UE_LOG(LogTemp, Log, TEXT("MovementInput.Y: %f"), MovementInput.Y);
-	
 }
 
 void AJuanitoPlayerController::MoveRight(float axisValue)
 {
 	MovementInput.X = axisValue;
-	UE_LOG(LogTemp, Log, TEXT("MovementInput.X: %f"), MovementInput.X);
-	
 }
