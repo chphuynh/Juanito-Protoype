@@ -17,10 +17,6 @@ AJuanitoCharacter::AJuanitoCharacter()
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 
-	// set our turn rates for input
-	BaseTurnRate = 45.f;
-	BaseLookUpRate = 45.f;
-
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
@@ -63,16 +59,8 @@ void AJuanitoCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerI
 	// handle touch devices
 	PlayerInputComponent->BindTouch(IE_Pressed, this, &AJuanitoCharacter::TouchStarted);
 	PlayerInputComponent->BindTouch(IE_Released, this, &AJuanitoCharacter::TouchStopped);
-
-	// VR headset functionality
-	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AJuanitoCharacter::OnResetVR);
 }
 
-
-void AJuanitoCharacter::OnResetVR()
-{
-	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
-}
 
 void AJuanitoCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
 {
@@ -82,18 +70,6 @@ void AJuanitoCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Loca
 void AJuanitoCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
 {
 		StopJumping();
-}
-
-void AJuanitoCharacter::TurnAtRate(float Rate)
-{
-	// calculate delta for this frame from the rate information
-	AddControllerYawInput(Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
-}
-
-void AJuanitoCharacter::LookUpAtRate(float Rate)
-{
-	// calculate delta for this frame from the rate information
-	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
 }
 
 void AJuanitoCharacter::MoveForward(float Value)
