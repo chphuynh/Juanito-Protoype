@@ -6,35 +6,44 @@
 #include "GameFramework/Character.h"
 #include "JuanitoCharacter.generated.h"
 
-UCLASS(Blueprintable)
+UCLASS(config=Game)
 class AJuanitoCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
-public:
-	AJuanitoCharacter();
-
-	// Called every frame.
-	virtual void Tick(float DeltaSeconds) override;
-
-	/** Returns TopDownCameraComponent subobject **/
-	FORCEINLINE class UCameraComponent* GetTopDownCameraComponent() const { return TopDownCameraComponent; }
-	/** Returns CameraBoom subobject **/
-	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
-	/** Returns CursorToWorld subobject **/
-	FORCEINLINE class UDecalComponent* GetCursorToWorld() { return CursorToWorld; }
-
-private:
-	/** Top down camera */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class UCameraComponent* TopDownCameraComponent;
-
-	/** Camera boom positioning the camera above the character */
+	/** Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;
 
-	/** A decal that projects to the cursor location. */
+	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class UDecalComponent* CursorToWorld;
+	class UCameraComponent* FollowCamera;
+public:
+	AJuanitoCharacter();
+
+protected:
+
+	/** Called for forwards/backward input */
+	void MoveForward(float Value);
+
+	/** Called for side to side input */
+	void MoveRight(float Value);
+
+	/** Handler for when a touch input begins. */
+	void TouchStarted(ETouchIndex::Type FingerIndex, FVector Location);
+
+	/** Handler for when a touch input stops. */
+	void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
+
+protected:
+	// APawn interface
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	// End of APawn interface
+
+public:
+	/** Returns CameraBoom subobject **/
+	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+	/** Returns FollowCamera subobject **/
+	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 };
 
