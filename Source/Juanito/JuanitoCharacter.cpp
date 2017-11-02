@@ -42,6 +42,8 @@ AJuanitoCharacter::AJuanitoCharacter()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
+	
+	IsHuman = true;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -53,6 +55,7 @@ void AJuanitoCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerI
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+	PlayerInputComponent->BindAction("ToggleGhost", IE_Pressed, this, &AJuanitoCharacter::ToggleGhostMode);
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &AJuanitoCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AJuanitoCharacter::MoveRight);
@@ -100,4 +103,11 @@ void AJuanitoCharacter::MoveRight(float Value)
 		// add movement in that direction
 		AddMovementInput(Direction, Value);
 	}
+}
+
+void AJuanitoCharacter::ToggleGhostMode()
+{
+	IsHuman = !IsHuman;
+	GetCharacterMovement()->JumpZVelocity = (IsHuman)? 600.f: 1200.f;
+	GetCharacterMovement()->AirControl = (IsHuman)? 0.2f: 0.4f;
 }
