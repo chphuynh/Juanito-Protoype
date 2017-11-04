@@ -46,7 +46,7 @@ AJuanitoCharacter::AJuanitoCharacter()
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 	
 	ConstructorHelpers::FObjectFinder<UMaterial> HumanMaterialFinder(_T("Material'/Game/Mannequin/Character/Materials/M_UE4Man_Body.M_UE4Man_Body'"));
-	ConstructorHelpers::FObjectFinder<UMaterial> SpiritMaterialFinder(_T("Material'/Game/Mannequin/Character/Materials/Spirit''"));
+	ConstructorHelpers::FObjectFinder<UMaterial> SpiritMaterialFinder(_T("Material'/Game/Mannequin/Character/Materials/Spirit'"));
 	if (HumanMaterialFinder.Object != NULL) 
 	{
 		HumanMaterial = (UMaterialInterface*)HumanMaterialFinder.Object;
