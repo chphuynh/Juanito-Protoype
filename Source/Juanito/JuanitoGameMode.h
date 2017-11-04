@@ -14,6 +14,3 @@ class AJuanitoGameMode : public AGameModeBase
 public:
 	AJuanitoGameMode();
 };
-
-
-

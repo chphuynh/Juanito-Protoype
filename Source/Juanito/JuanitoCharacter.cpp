@@ -1,6 +1,7 @@
 // Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
 #include "JuanitoCharacter.h"
+#include "JuanitoGameMode.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -8,6 +9,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "UObject/ConstructorHelpers.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AJuanitoCharacter
@@ -43,6 +45,18 @@ AJuanitoCharacter::AJuanitoCharacter()
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 	
+	ConstructorHelpers::FObjectFinder<UMaterial> HumanMaterialFinder(_T("Material'/Game/Mannequin/Character/Materials/M_UE4Man_Body.M_UE4Man_Body'"));
+	ConstructorHelpers::FObjectFinder<UMaterial> SpiritMaterialFinder(_T("Material'/Game/Mannequin/Character/Materials/Spirit''"));
+	if (HumanMaterialFinder.Object != NULL) 
+	{
+		HumanMaterial = (UMaterialInterface*)HumanMaterialFinder.Object;
+	}
+	
+	if (SpiritMaterialFinder.Object != NULL)
+	{
+		SpiritMaterial = (UMaterialInterface*)SpiritMaterialFinder.Object;
+	}
+	
 	IsHuman = true;
 }
 
@@ -59,21 +73,6 @@ void AJuanitoCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerI
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &AJuanitoCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AJuanitoCharacter::MoveRight);
-
-	// handle touch devices
-	PlayerInputComponent->BindTouch(IE_Pressed, this, &AJuanitoCharacter::TouchStarted);
-	PlayerInputComponent->BindTouch(IE_Released, this, &AJuanitoCharacter::TouchStopped);
-}
-
-
-void AJuanitoCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
-{
-		Jump();
-}
-
-void AJuanitoCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
-{
-		StopJumping();
 }
 
 void AJuanitoCharacter::MoveForward(float Value)
@@ -108,6 +107,8 @@ void AJuanitoCharacter::MoveRight(float Value)
 void AJuanitoCharacter::ToggleGhostMode()
 {
 	IsHuman = !IsHuman;
-	GetCharacterMovement()->JumpZVelocity = (IsHuman)? 600.f: 1200.f;
-	GetCharacterMovement()->AirControl = (IsHuman)? 0.2f: 0.4f;
+	UMaterialInterface* CorrectMaterial = (IsHuman)? HumanMaterial: SpiritMaterial;
+	UMaterialInstanceDynamic* ChangedMaterial = UMaterialInstanceDynamic::Create(CorrectMaterial, GetMesh());
+	
+	GetMesh()->SetMaterial(0, ChangedMaterial);
 }
