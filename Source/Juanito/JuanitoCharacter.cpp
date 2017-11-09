@@ -27,7 +27,7 @@ AJuanitoCharacter::AJuanitoCharacter()
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f); // ...at this rotation rate
-	GetCharacterMovement()->JumpZVelocity = 600.f;
+	GetCharacterMovement()->JumpZVelocity = 300.f;
 	GetCharacterMovement()->AirControl = 0.2f;
 
 	// Create a camera boom (pulls in towards the player if there is a collision)
@@ -46,7 +46,7 @@ AJuanitoCharacter::AJuanitoCharacter()
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 	
 	ConstructorHelpers::FObjectFinder<UMaterial> HumanMaterialFinder(_T("Material'/Game/Mannequin/Character/Materials/M_UE4Man_Body.M_UE4Man_Body'"));
-	ConstructorHelpers::FObjectFinder<UMaterial> SpiritMaterialFinder(_T("Material'/Game/Mannequin/Character/Materials/Spirit'"));
+	ConstructorHelpers::FObjectFinder<UMaterial> SpiritMaterialFinder(_T("Material'/Game/Mannequin/Character/Materials/Spirit.Spirit'"));
 	if (HumanMaterialFinder.Object != NULL) 
 	{
 		HumanMaterial = (UMaterialInterface*)HumanMaterialFinder.Object;
@@ -107,8 +107,11 @@ void AJuanitoCharacter::MoveRight(float Value)
 void AJuanitoCharacter::ToggleGhostMode()
 {
 	IsHuman = !IsHuman;
+	// Change Material
 	UMaterialInterface* CorrectMaterial = (IsHuman)? HumanMaterial: SpiritMaterial;
 	UMaterialInstanceDynamic* ChangedMaterial = UMaterialInstanceDynamic::Create(CorrectMaterial, GetMesh());
-	
 	GetMesh()->SetMaterial(0, ChangedMaterial);
+	
+	// Change jump height
+	GetCharacterMovement()->JumpZVelocity = (IsHuman)? 400.f: 600.f;
 }
