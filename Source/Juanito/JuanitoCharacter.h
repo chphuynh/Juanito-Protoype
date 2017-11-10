@@ -35,7 +35,7 @@ protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	// End of APawn interface
 	
-	bool IsHuman;
+	bool HumanFlag;
 	UMaterialInterface* HumanMaterial;
 	UMaterialInterface* SpiritMaterial;
 

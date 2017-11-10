@@ -27,7 +27,8 @@ AJuanitoCharacter::AJuanitoCharacter()
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f); // ...at this rotation rate
-	GetCharacterMovement()->JumpZVelocity = 300.f;
+	GetCharacterMovement()->GravityScale = 2.5f;
+	GetCharacterMovement()->JumpZVelocity = 600.f;
 	GetCharacterMovement()->AirControl = 0.2f;
 
 	// Create a camera boom (pulls in towards the player if there is a collision)
@@ -57,7 +58,7 @@ AJuanitoCharacter::AJuanitoCharacter()
 		SpiritMaterial = (UMaterialInterface*)SpiritMaterialFinder.Object;
 	}
 	
-	IsHuman = true;
+	HumanFlag = true;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -106,12 +107,13 @@ void AJuanitoCharacter::MoveRight(float Value)
 
 void AJuanitoCharacter::ToggleGhostMode()
 {
-	IsHuman = !IsHuman;
+	HumanFlag = !HumanFlag;
 	// Change Material
-	UMaterialInterface* CorrectMaterial = (IsHuman)? HumanMaterial: SpiritMaterial;
+	UMaterialInterface* CorrectMaterial = (HumanFlag)? HumanMaterial: SpiritMaterial;
 	UMaterialInstanceDynamic* ChangedMaterial = UMaterialInstanceDynamic::Create(CorrectMaterial, GetMesh());
 	GetMesh()->SetMaterial(0, ChangedMaterial);
 	
 	// Change jump height
-	GetCharacterMovement()->JumpZVelocity = (IsHuman)? 400.f: 600.f;
+	GetCharacterMovement()->JumpZVelocity = (HumanFlag)? 600.f: 700.f;
+	GetCharacterMovement()->GravityScale = (HumanFlag)? 2.5f: 1.5f;
 }
