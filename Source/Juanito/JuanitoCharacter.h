@@ -19,7 +19,20 @@ class AJuanitoCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
 public:
+	/** Returns CameraBoom subobject **/
+	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+	/** Returns FollowCamera subobject **/
+	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+	
 	AJuanitoCharacter();
+	
+	
+	UFUNCTION(BlueprintPure)
+	bool IsHuman();
+	
+	UFUNCTION(BlueprintPure)
+	bool IsSpirit();
+	
 
 protected:
 
@@ -39,10 +52,5 @@ protected:
 	UMaterialInterface* HumanMaterial;
 	UMaterialInterface* SpiritMaterial;
 
-public:
-	/** Returns CameraBoom subobject **/
-	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
-	/** Returns FollowCamera subobject **/
-	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 };
 

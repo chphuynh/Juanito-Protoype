@@ -117,3 +117,8 @@ void AJuanitoCharacter::ToggleGhostMode()
 	GetCharacterMovement()->JumpZVelocity = (HumanFlag)? 600.f: 700.f;
 	GetCharacterMovement()->GravityScale = (HumanFlag)? 2.5f: 1.5f;
 }
+
+bool AJuanitoCharacter::IsHuman() {return HumanFlag;}
+bool AJuanitoCharacter::IsSpirit() {return !HumanFlag;}
+
+
