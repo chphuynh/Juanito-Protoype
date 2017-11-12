@@ -1,6 +1,7 @@
 // Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
 #include "JuanitoCharacter.h"
+#include "JuanitoGameMode.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -8,6 +9,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "UObject/ConstructorHelpers.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AJuanitoCharacter
@@ -25,6 +27,7 @@ AJuanitoCharacter::AJuanitoCharacter()
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f); // ...at this rotation rate
+	GetCharacterMovement()->GravityScale = 2.5f;
 	GetCharacterMovement()->JumpZVelocity = 600.f;
 	GetCharacterMovement()->AirControl = 0.2f;
 
@@ -42,6 +45,20 @@ AJuanitoCharacter::AJuanitoCharacter()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
+	
+	ConstructorHelpers::FObjectFinder<UMaterial> HumanMaterialFinder(_T("Material'/Game/Mannequin/Character/Materials/M_UE4Man_Body'"));
+	ConstructorHelpers::FObjectFinder<UMaterial> SpiritMaterialFinder(_T("Material'/Game/Mannequin/Character/Materials/Spirit'"));
+	if (HumanMaterialFinder.Object != NULL) 
+	{
+		HumanMaterial = (UMaterialInterface*)HumanMaterialFinder.Object;
+	}
+	
+	if (SpiritMaterialFinder.Object != NULL)
+	{
+		SpiritMaterial = (UMaterialInterface*)SpiritMaterialFinder.Object;
+	}
+	
+	HumanFlag = true;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -53,24 +70,10 @@ void AJuanitoCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerI
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+	PlayerInputComponent->BindAction("ToggleGhost", IE_Pressed, this, &AJuanitoCharacter::ToggleGhostMode);
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &AJuanitoCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AJuanitoCharacter::MoveRight);
-
-	// handle touch devices
-	PlayerInputComponent->BindTouch(IE_Pressed, this, &AJuanitoCharacter::TouchStarted);
-	PlayerInputComponent->BindTouch(IE_Released, this, &AJuanitoCharacter::TouchStopped);
-}
-
-
-void AJuanitoCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
-{
-		Jump();
-}
-
-void AJuanitoCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
-{
-		StopJumping();
 }
 
 void AJuanitoCharacter::MoveForward(float Value)
@@ -101,3 +104,21 @@ void AJuanitoCharacter::MoveRight(float Value)
 		AddMovementInput(Direction, Value);
 	}
 }
+
+void AJuanitoCharacter::ToggleGhostMode()
+{
+	HumanFlag = !HumanFlag;
+	// Change Material
+	UMaterialInterface* CorrectMaterial = (HumanFlag)? HumanMaterial: SpiritMaterial;
+	UMaterialInstanceDynamic* ChangedMaterial = UMaterialInstanceDynamic::Create(CorrectMaterial, GetMesh());
+	GetMesh()->SetMaterial(0, ChangedMaterial);
+	
+	// Change jump height
+	GetCharacterMovement()->JumpZVelocity = (HumanFlag)? 600.f: 700.f;
+	GetCharacterMovement()->GravityScale = (HumanFlag)? 2.5f: 1.5f;
+}
+
+bool AJuanitoCharacter::IsHuman() {return HumanFlag;}
+bool AJuanitoCharacter::IsSpirit() {return !HumanFlag;}
+
+

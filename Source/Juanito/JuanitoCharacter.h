@@ -19,7 +19,20 @@ class AJuanitoCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
 public:
+	/** Returns CameraBoom subobject **/
+	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+	/** Returns FollowCamera subobject **/
+	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+	
 	AJuanitoCharacter();
+	
+	
+	UFUNCTION(BlueprintPure)
+	bool IsHuman();
+	
+	UFUNCTION(BlueprintPure)
+	bool IsSpirit();
+	
 
 protected:
 
@@ -28,22 +41,16 @@ protected:
 
 	/** Called for side to side input */
 	void MoveRight(float Value);
+	
+	void ToggleGhostMode();
 
-	/** Handler for when a touch input begins. */
-	void TouchStarted(ETouchIndex::Type FingerIndex, FVector Location);
-
-	/** Handler for when a touch input stops. */
-	void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
-
-protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	// End of APawn interface
+	
+	bool HumanFlag;
+	UMaterialInterface* HumanMaterial;
+	UMaterialInterface* SpiritMaterial;
 
-public:
-	/** Returns CameraBoom subobject **/
-	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
-	/** Returns FollowCamera subobject **/
-	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 };
 
